@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Command">
+
+		<Text>hidden word command</Text>
+
+		<Assembly>Module02Challenge.dll</Assembly>
+		<FullClassName>Module02Challenge.Challenge02</FullClassName>
+
+		<Description>Show Hello World.</Description>
+		<VisibilityMode>AlwaysVisible</VisibilityMode>
+
+		<AddInId>
+
+			9B8EBAA7-BD0C-4905-9D84-3E863D0721B9
+			
+		</AddInId>
+
+		<VendorId>Ahmed</VendorId>
+		<VendorDescription>Ahmed Ibrahim</VendorDescription>
+	</AddIn>
+</RevitAddIns>

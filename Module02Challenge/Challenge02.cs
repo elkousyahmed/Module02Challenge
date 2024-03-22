@@ -1,5 +1,6 @@
-﻿using Autodesk.Revit.Attributes;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,13 @@ namespace Module02Challenge
 
             TaskDialog.Show("selectoin quantity", "you selected " + pickElementsFromRvtFile.Count.ToString() + " elements from revit");
 
-            /*
-             * 
-             * 
+
+            //uidoc.Selection.PickPoint();
+
+
+
+            /*----------------------------------------------------------****
+
             
             // filter for curve elements only (model lline or detail line)
 
@@ -37,10 +42,7 @@ namespace Module02Challenge
                 }
             }
 
-            *
-            *
-            *
-            */
+            ----------------------------------------------------------*/
 
 
 
@@ -63,64 +65,67 @@ namespace Module02Challenge
             }
 
 
-            #region try01
-            /*
-            foreach (CurveElement curveElem in modelCurveOnly)
-            {
-                switch (curveElem.LineStyle)
-                {
-                    case "A-GLAZ":
 
-                    default:
-                        break;
-                }
-            } 
-            */
-            #endregion
+
 
             using (Transaction t = new Transaction(doc))
             {
 
                 t.Start("Create Elements");
-
                 Level level1 = Level.Create(doc, 100);
-                
-                foreach (CurveElement curveElem in modelCurveOnly)
-                {
-                    //A-GLAZ
-                    if (curveElem.LineStyle.Name == "A-GLAZ")
-                    {
-                        Wall w = Wall.Create(doc, curveElem, level1.Id, false);
 
+
+                foreach (CurveElement line in modelCurveOnly)
+                {
+                    Curve c1 = line.GeometryCurve;
+
+
+
+                    ////A-GLAZ
+                    if (line.LineStyle.Name == "A-GLAZ")
+                    {
+
+                        Wall w = Wall.Create(doc, c1, level1.Id, false);
 
                     }
 
                     //A-WALL
-                    else if (curveElem.LineStyle.Name == "A-WALL")
+                    if (line.LineStyle.Name == "A-WALL")
                     {
+                        //FilteredElementCollector wallTypeFilter = new FilteredElementCollector(doc).OfClass(typeof(WallType));
+
+                        WallType w = new FilteredElementCollector(doc)
+                            .OfCategory(BuiltInCategory.OST_Walls)
+                            .WhereElementIsElementType().FirstElement() as WallType;
 
 
+                        Wall.Create(doc, c1, w.Id, level1.Id, 15, 0, false, false);
 
                     }
 
                     //M-DUCT
-                    else if (curveElem.LineStyle.Name == "M-DUCT")
+
+
+                    if (line.LineStyle.Name == "M-DUCT")
                     {
 
-
-
+                        Wall w = Wall.Create(doc, c1, level1.Id, false);
                     }
 
+
+
                     //P-PIPE
-                    else if (curveElem.LineStyle.Name == "P-PIPE")
+                    if (line.LineStyle.Name == "P-PIPE")
                     {
 
-
-
+                        Wall w = Wall.Create(doc, c1, level1.Id, false);
 
                     }
 
                 }
+
+
+
 
                 t.Commit();
 
